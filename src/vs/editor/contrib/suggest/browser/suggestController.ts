@@ -14,6 +14,8 @@ import { ContextKeyExpr, IContextKeyService } from 'vs/platform/contextkey/commo
 import { ICommandService } from 'vs/platform/commands/common/commands';
 import { ICommonCodeEditor, IEditorContribution, EditorContextKeys, ModeContextKeys } from 'vs/editor/common/editorCommon';
 import { editorAction, ServicesAccessor, EditorAction, EditorCommand, CommonEditorRegistry } from 'vs/editor/common/editorCommonExtensions';
+import { KeybindingsRegistry } from 'vs/platform/keybinding/common/keybindingsRegistry';
+import { IOSupport } from 'vs/platform/keybinding/common/keybindingResolver';
 import { ICodeEditor } from 'vs/editor/browser/editorBrowser';
 import { editorContribution } from 'vs/editor/browser/editorBrowserExtensions';
 import { EditOperation } from 'vs/editor/common/core/editOperation';
@@ -197,6 +199,13 @@ CommonEditorRegistry.registerEditorCommand(new SuggestCommand({
 		primary: KeyCode.Tab
 	}
 }));
+
+KeybindingsRegistry.registerKeybindingRule({
+	id: '^acceptSelectedSuggestion',
+	primary: KeyCode.US_DOT,
+	when: IOSupport.readKeybindingWhen('editorTextFocus && suggestWidgetVisible && editorLangId == \'csharp\' && suggestionSupportsAcceptOnKey'),
+	weight: weight
+});
 
 CommonEditorRegistry.registerEditorCommand(new SuggestCommand({
 	id: 'acceptSelectedSuggestionOnEnter',
